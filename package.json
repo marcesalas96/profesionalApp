@@ -1,21 +1,55 @@
 {
   "name": "profesionalapp",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/webpack-config": "^18.0.1",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-native-fontawesome": "^0.3.0",
+    "@supersami/rn-foreground-service": "^2.1.0",
+    "axios": "^1.4.0",
     "expo": "~48.0.18",
+    "expo-background-fetch": "~11.1.1",
+    "expo-constants": "~14.2.1",
+    "expo-location": "~15.1.1",
+    "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
+    "expo-task-manager": "~11.1.1",
+    "formik": "^2.4.2",
+    "jetifier": "^2.0.0",
     "react": "18.2.0",
-    "react-native": "0.71.8"
+    "react-dom": "18.2.0",
+    "react-native": "0.71.8",
+    "react-native-svg": "13.4.0",
+    "react-native-web": "~0.18.10",
+    "react-router-native": "^6.13.0",
+    "yup": "^1.2.0",
+    "@react-native-async-storage/async-storage": "1.17.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "babel-eslint": "^10.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-config-standard-jsx": "^11.0.0",
+    "eslint-config-standard-react": "^13.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2"
   },
-  "private": true
+  "private": true,
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": [
+      "standard",
+      "standard-jsx",
+      "standard-react"
+    ]
+  }
 }
