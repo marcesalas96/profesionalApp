@@ -8,6 +8,7 @@ const backendApi = axios.create({
 
 
 backendApi.interceptors.request.use(async (config) => {
+
   config.headers = {
     ...config.headers,
     'Authorization': `Bearer ${await AsyncStorage.getItem('token')}`,

@@ -26,11 +26,12 @@ const styles = StyleSheet.create({
     }
 
 })
-const Footer = () => {
+
+const Footer = ({navigation}) => {
     return (
         <View style={styles.container}>
-            <FooterTab to={"/"} icon={faToggleOn} styles={styles}>Estado</FooterTab>
-            <FooterTab to={"/viajes"} icon={faCommentDots} styles={styles}>Notificaciones</FooterTab>
+            <FooterTab to={"home"} icon={faToggleOn} styles={styles} navigation={navigation}>Estado</FooterTab>
+            <FooterTab to={"viajes"} icon={faCommentDots} styles={styles} navigation={navigation}>Notificaciones</FooterTab>
         </View>
     )
 }

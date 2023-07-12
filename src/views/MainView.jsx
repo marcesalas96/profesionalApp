@@ -1,6 +1,9 @@
-import { View, StyleSheet} from 'react-native'
-import ActualState from '../components/ActualState'
+import { View, StyleSheet } from 'react-native'
 import ButtonChangeState from '../components/ButtonChangeState'
+import AppBar from '../components/AppBar'
+import Footer from '../components/Footer'
+import React from 'react';
+
 
 const styles = StyleSheet.create({
     container: {
@@ -10,12 +13,16 @@ const styles = StyleSheet.create({
     }
 })
 
-const MainView = () => {
+const MainView = ({navigation}) => {
+
     return (
-        <View style={styles.container}>
-            <ActualState/>
-            <ButtonChangeState/>
-        </View>
+        <>
+            <AppBar navigation={navigation} section={"ESTADO"}/>
+            <View style={styles.container}>
+                <ButtonChangeState />
+            </View>
+            <Footer navigation={navigation}/>
+        </>
     )
 }
 export default MainView
