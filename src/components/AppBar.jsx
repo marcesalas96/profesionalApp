@@ -1,7 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPowerOff } from '@fortawesome/free-solid-svg-icons'
 import Constants from 'expo-constants'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, Button, TouchableOpacity } from 'react-native'
+import backendApi from '../api/backendApi.js'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const styles = StyleSheet.create({
     container: {
@@ -16,14 +18,25 @@ const styles = StyleSheet.create({
         color: "#fafafa",
         fontSize: 20
     }
+
 })
-const AppBar = () => {
+const AppBar = ({ navigation, section }) => {
+
+    const logout = () => {
+        backendApi.post('/logout').then(async () => {
+            await AsyncStorage.clear()
+            navigation.navigate("login")
+        })
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.text}>
-                ESTADO
+                {section}
             </Text>
-            <FontAwesomeIcon icon={faPowerOff} size={25} style={{ color: "#d10000" }} />
+            <TouchableOpacity onPress={() => {logout()}}>
+                <FontAwesomeIcon icon={faPowerOff} size={25} style={{ color: "#d10000" }} />
+            </TouchableOpacity>
         </View>
     )
 }
