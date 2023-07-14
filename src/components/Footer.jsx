@@ -7,14 +7,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#20232a",
         padding: 15,
         flexDirection: 'row',
-        justifyContent: "space-around",
+        justifyContent: "space-evenly"
     },
     text: {
         color: "#fafafa",
-        fontSize: 15
+        fontSize: 15,
+        textAlign: 'center'
     },
     footerContainer: {
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
+        width: 100
 
     },
     logo: {

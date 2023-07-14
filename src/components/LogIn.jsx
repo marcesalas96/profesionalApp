@@ -1,10 +1,12 @@
-import { Button, View, StyleSheet, Text, Dimensions } from 'react-native'
+import { Button, View, StyleSheet, Text, Dimensions, Alert,BackHandler } from 'react-native'
 import { Formik, useField } from 'formik'
 import { TextInput } from 'react-native'
 import * as yup from 'yup'
 import backendApi from '../api/backendApi'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Navigate, redirect } from 'react-router-native'
+import * as Location from 'expo-location'
+import { useEffect } from 'react'
+import { useState } from 'react'
 
 const styles = StyleSheet.create({
     container: {
@@ -71,11 +73,21 @@ const FormikInputValue = ({ error, style = {}, name, ...props }) => {
 const LogInPage = ({ navigation }) => {
 
 
+        const [loginError, setloginError] = useState("")
+        const createAlertNoChofer = () => {
+        console.log("entre alert")
+        Alert.alert(
+            "Notificacíon",
+            "El usuario ingresado no es de tipo CHOFER",
+            [{ text: "OK", onPress: () => { BackHandler.exitApp() } }]
+        )
+    }
+
     const checkUserLogin = async () => {
+        console.log("entre userlogin")
         const token = await AsyncStorage.getItem("token")
-        console.log("tokeeeen", token)
-        if(token){
-            return(
+        if (token) {
+            return (
                 navigation.navigate("home")
             )
         }
@@ -96,15 +108,24 @@ const LogInPage = ({ navigation }) => {
                     await AsyncStorage.setItem('token-init-date', JSON.stringify(new Date().getTime()));
                     navigation.navigate("home")
                 }
+                else{
+                    createAlertNoChofer()
+                }
             }
-            )
+        )
+        .catch(error => {
+            setloginError("Credenciales incorrectas, intente de nuevo")
+        })
     }
-    checkUserLogin()
+
+    useEffect(() => {
+        checkUserLogin()
+    }, [])
     return (
         <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={onHandleSubmit} >
             {({ handleSubmit }) => {
                 return (
-                    <View style={{backgroundColor: "#171f4b", flex: 1}}>
+                    <View style={{ backgroundColor: "#171f4b", flex: 1 }}>
                         <View style={styles.container}>
                             <View style={{ flexDirection: "row", alignSelf: "center" }}>
                                 <Text style={{ color: "#2b2650", fontSize: 20, fontWeight: "bold" }}>Profesional | </Text>
@@ -112,6 +133,7 @@ const LogInPage = ({ navigation }) => {
                             </View>
                             <FormikInputValue name={"user"} placeholder={"Usuario"} />
                             <FormikInputValue name={"password"} placeholder={"Contraseña"} secureTextEntry />
+                            {loginError && <Text style={{ color: "#FF4960"}}>{loginError}</Text>}
                             <Button title='Ingresar' onPress={handleSubmit} color={"#FF4960"} />
                         </View>
                     </View>

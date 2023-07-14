@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useEffect } from 'react'
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, Text, StyleSheet, Alert, BackHandler } from 'react-native'
 import backendApi from '../api/backendApi'
 
 
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        marginBottom: 200
+        marginBottom: 130
     },
     botonOcupado: {
         width: 270,
@@ -37,29 +37,31 @@ const styles = StyleSheet.create({
     },
     textEstado: {
         color: "#fafafa",
+        fontSize: 25
     },
     textContainer: {
-        flexDirection: "row",
+        justifyContent: "center",
         alignItems: "center",
-        marginLeft: 15
+        marginTop:20
+
     },
     libre: {
         backgroundColor: "#2eb85c",
+        marginTop:20,
         borderRadius: 3,
-        alignSelf: "flex-start",
+        alignSelf: "center",
         padding: 3,
-        marginLeft: 10,
-        fontSize: 15,
+        fontSize: 30,
         fontWeight: "bold",
         color: "#ffffff",
     },
     ocupado: {
         backgroundColor: "#cf2122",
+        marginTop:20,
         borderRadius: 3,
-        alignSelf: "flex-start",
+        alignSelf: "center",
         padding: 3,
-        marginLeft: 10,
-        fontSize: 15,
+        fontSize: 30,
         color: "#ffffff",
         fontWeight: "bold"
     }
@@ -75,7 +77,6 @@ const ButtonChangeState = () => {
             const userFromStorage = JSON.parse(response)
             setUser(userFromStorage)
             await backendApi.get(`vehiculos/${userFromStorage.vehiculo_id}`).then(response => {
-                console.log(response.data[0].disponible)
                 response.data[0].disponible === "DISPONIBLE"
                     ? setEstado({ disponible: true })
                     : setEstado({ disponible: false })
@@ -83,9 +84,6 @@ const ButtonChangeState = () => {
         })
     }
 
-    const saveEstado = () => {
-        backendApi.post(`/vehiculos/${user.vehiculo_id}/changeStatus`, { disponible: estado.disponible })
-    }
     const onEstadoChange = () => {
         setEstado({ disponible: !estado.disponible })
         backendApi.post(`/vehiculos/${user.vehiculo_id}/changeStatus`, { disponible: !estado.disponible })
@@ -99,7 +97,7 @@ const ButtonChangeState = () => {
         <>
             <View style={styles.textContainer}>
                 <Text style={styles.textEstado}>
-                    ESTADO ACTUAL:
+                    ESTADO ACTUAL
                 </Text>
                 {
                     estado.disponible === true ?

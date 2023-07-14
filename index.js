@@ -18,17 +18,20 @@ const requestPermissions = async () => {
             })
             await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
                 accuracy: Location.Accuracy.BestForNavigation,
-                deferredUpdatesDistance: 70,
+                deferredUpdatesDistance: 100,
                 timeInterval: 5000,
                 activityType: Location.ActivityType.AutomotiveNavigation,
                 showsBackgroundLocationIndicator: true,
                 foregroundService: {
                     killServiceOnDestroy: true,
                     notificationBody: "Usando ubicacion en 2 plano",
-                    notificationTitle: "Ubicacion"
+                    notificationTitle: "Ubicacion",
+                    
                 }
             });
         }
+    }
+    else{
     }
 };
 requestPermissions()
@@ -39,7 +42,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
         return;
     }
     if(user === null){
-        console.log("entre user")
         AsyncStorage.getItem('ubicacion', (err, result) => {
             user = JSON.parse(result)
         })
@@ -48,7 +50,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
         const { locations } = data;
         // do something with the locations captured in the background
         try {
-            console.log("entre")
             console.log(locations[0].coords.latitude, locations[0].coords.longitude)
             user.latitud = locations[0].coords.latitude
             user.longitud = locations[0].coords.longitude
