@@ -8,7 +8,7 @@ import React from 'react';
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#1a1010",
-        paddingTop: 20,
+        // paddingTop: 20,
         flex: 1
     }
 })

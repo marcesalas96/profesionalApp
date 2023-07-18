@@ -4,6 +4,7 @@ import Constants from 'expo-constants'
 import { View, StyleSheet, Text, Button, TouchableOpacity } from 'react-native'
 import backendApi from '../api/backendApi.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as TaskManager from 'expo-task-manager';
 
 const styles = StyleSheet.create({
     container: {
@@ -24,6 +25,7 @@ const AppBar = ({ navigation, section }) => {
 
     const logout = () => {
         backendApi.post('/logout').then(async () => {
+            await TaskManager.unregisterAllTasksAsync()
             await AsyncStorage.clear()
             navigation.navigate("login")
         })

@@ -18,7 +18,7 @@ const requestPermissions = async () => {
             })
             await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
                 accuracy: Location.Accuracy.BestForNavigation,
-                deferredUpdatesDistance: 100,
+                deferredUpdatesDistance: 30,
                 timeInterval: 5000,
                 activityType: Location.ActivityType.AutomotiveNavigation,
                 showsBackgroundLocationIndicator: true,

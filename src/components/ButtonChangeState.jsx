@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        marginBottom: 130
     },
     botonOcupado: {
         width: 270,
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
     textContainer: {
         justifyContent: "center",
         alignItems: "center",
-        marginTop:20
+        marginTop:20,
 
     },
     libre: {

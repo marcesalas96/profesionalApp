@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from "react-native"
-import direcciones from "../mock/direcciones"
 import { useEffect, useState } from "react"
 import backendApi from "../api/backendApi"
 import AsyncStorage from "@react-native-async-storage/async-storage"
