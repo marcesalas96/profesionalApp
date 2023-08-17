@@ -1,12 +1,13 @@
-import { Button, View, StyleSheet, Text, Dimensions, Alert,BackHandler } from 'react-native'
+import { Button, View, StyleSheet, Text, Dimensions, Alert, BackHandler } from 'react-native'
 import { Formik, useField } from 'formik'
 import { TextInput } from 'react-native'
 import * as yup from 'yup'
 import backendApi from '../api/backendApi'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Location from 'expo-location'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { startActivityAsync, ActivityAction } from 'expo-intent-launcher';
+import * as Battery from 'expo-battery';
+import Context from '../context/authContext'
 
 const styles = StyleSheet.create({
     container: {
@@ -70,30 +71,10 @@ const FormikInputValue = ({ error, style = {}, name, ...props }) => {
 }
 
 
-const LogInPage = ({ navigation }) => {
+const LogInPage = () => {
 
-
-        const [loginError, setloginError] = useState("")
-        const createAlertNoChofer = () => {
-        console.log("entre alert")
-        Alert.alert(
-            "Notificacíon",
-            "El usuario ingresado no es de tipo CHOFER",
-            [{ text: "OK", onPress: () => { BackHandler.exitApp() } }]
-        )
-    }
-
-    const checkUserLogin = async () => {
-        console.log("entre userlogin")
-        const token = await AsyncStorage.getItem("token")
-        if (token) {
-            return (
-                navigation.navigate("home")
-            )
-        }
-    }
-
-
+    const [loginError, setloginError] = useState("")
+    const { setToken } = useContext(Context)
     const onHandleSubmit = (values) => {
         const loginData = {
             user: values.user,
@@ -106,20 +87,22 @@ const LogInPage = ({ navigation }) => {
                     await AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
                     await AsyncStorage.setItem('ubicacion', JSON.stringify(response.data.ubicacion[0]));
                     await AsyncStorage.setItem('token-init-date', JSON.stringify(new Date().getTime()));
-                    navigation.navigate("home")
-                }
-                else{
-                    createAlertNoChofer()
+                    setToken(response.data.token)
                 }
             }
-        )
-        .catch(error => {
-            setloginError("Credenciales incorrectas, intente de nuevo")
-        })
+            )
+            .catch(error => {
+                setloginError("Credenciales incorrectas, intente de nuevo")
+            })
+
     }
 
     useEffect(() => {
-        checkUserLogin()
+        Battery.isBatteryOptimizationEnabledAsync().then(result => {
+            if (result) {
+                startActivityAsync(ActivityAction.MANAGE_APPLICATIONS_SETTINGS);
+            }
+        })
     }, [])
     return (
         <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={onHandleSubmit} >
@@ -133,7 +116,7 @@ const LogInPage = ({ navigation }) => {
                             </View>
                             <FormikInputValue name={"user"} placeholder={"Usuario"} />
                             <FormikInputValue name={"password"} placeholder={"Contraseña"} secureTextEntry />
-                            {loginError && <Text style={{ color: "#FF4960"}}>{loginError}</Text>}
+                            {loginError && <Text style={{ color: "#FF4960" }}>{loginError}</Text>}
                             <Button title='Ingresar' onPress={handleSubmit} color={"#FF4960"} />
                         </View>
                     </View>

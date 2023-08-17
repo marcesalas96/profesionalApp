@@ -18,8 +18,8 @@ const requestPermissions = async () => {
             })
             await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
                 accuracy: Location.Accuracy.BestForNavigation,
-                deferredUpdatesDistance: 30,
-                timeInterval: 5000,
+                deferredUpdatesDistance: 10,
+                timeInterval: 10000,
                 activityType: Location.ActivityType.AutomotiveNavigation,
                 showsBackgroundLocationIndicator: true,
                 foregroundService: {
@@ -48,9 +48,8 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     }
     if (data) {
         const { locations } = data;
-        // do something with the locations captured in the background
+        console.log(locations)
         try {
-            console.log(locations[0].coords.latitude, locations[0].coords.longitude)
             user.latitud = locations[0].coords.latitude
             user.longitud = locations[0].coords.longitude
             backendApi.put(`/ubicaciones/${user.id}`, user)

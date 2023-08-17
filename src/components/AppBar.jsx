@@ -5,6 +5,8 @@ import { View, StyleSheet, Text, Button, TouchableOpacity } from 'react-native'
 import backendApi from '../api/backendApi.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as TaskManager from 'expo-task-manager';
+import { useContext } from 'react'
+import Context from '../context/authContext.js'
 
 const styles = StyleSheet.create({
     container: {
@@ -22,12 +24,12 @@ const styles = StyleSheet.create({
 
 })
 const AppBar = ({ navigation, section }) => {
-
+    const {setToken} = useContext(Context)
     const logout = () => {
         backendApi.post('/logout').then(async () => {
             await TaskManager.unregisterAllTasksAsync()
             await AsyncStorage.clear()
-            navigation.navigate("login")
+            setToken(null)
         })
     }
 

@@ -1,22 +1,18 @@
-import { Link, useLocation } from "react-router-native"
-import { View, Text, TouchableHighlightComponent } from "react-native"
+import { View, Text } from "react-native"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { TouchableNativeFeedback } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
-const FooterTab = ({ children, to, icon, styles, navigation }) => {
+const FooterTab = ({ children, to, icon, styles }) => {
 
-    // const {pathname} = useLocation()
-    // const active = pathname === to
+    const navigation = useNavigation()
     const textStyles = [
         styles.text,
-        // active && styles.active
     ]
     const logoStyles = [
         styles.logo,
-        // active && styles.active
     ]
     return (
-        // <Link to={to} >
         <TouchableNativeFeedback onPress={() => { navigation.navigate(to) }}>
             <View style={styles.footerContainer} >
                 <FontAwesomeIcon icon={icon} size={20} style={logoStyles} />
@@ -27,7 +23,6 @@ const FooterTab = ({ children, to, icon, styles, navigation }) => {
                 </Text>
             </View>
         </TouchableNativeFeedback>
-        // </Link>
     )
 }
 

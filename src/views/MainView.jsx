@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native'
 import ButtonChangeState from '../components/ButtonChangeState'
 import AppBar from '../components/AppBar'
 import Footer from '../components/Footer'
-import React from 'react';
+import React, { useEffect } from 'react';
 
 
 const styles = StyleSheet.create({
@@ -14,7 +14,11 @@ const styles = StyleSheet.create({
 })
 
 const MainView = ({navigation}) => {
-
+    // useEffect(()=> {
+    //     navigation.addListener("beforeRemove", (e) => {
+    //         e.preventDefault()
+    //     })
+    // }, [])
     return (
         <>
             <AppBar navigation={navigation} section={"ESTADO"}/>

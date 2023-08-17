@@ -1,19 +1,22 @@
-import { View, Text, StyleSheet } from "react-native"
-import { useEffect, useState } from "react"
+import { View, Text, StyleSheet, RefreshControl } from "react-native"
+import { useEffect, useState, useCallback } from "react"
 import backendApi from "../api/backendApi"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { ScrollView } from "react-native"
 
-const DireccionesList = () => {
-
-    const [user, setUser] = useState({})
+const DireccionesList = ({ }) => {
+    
     const [direcciones, setDirecciones] = useState([])
+    const [refreshing, setRefreshing] = useState(false);
     const styles = StyleSheet.create(
         {
             container: {
                 padding: 10,
                 borderBottomWidth: 1,
-                borderBottomColor: "#cccc"
-                
+                borderBottomColor: "#cccc",
+                flexDirection: "row",
+                justifyContent: "space-between"
+
             },
             direccionContainer: {
                 flexDirection: "row",
@@ -26,51 +29,98 @@ const DireccionesList = () => {
             direccionText: {
                 color: "#7c9cff",
                 fontSize: 15
+            },
+            viewIsNew: {
+                alignSelf: "center",
+                marginLeft: 30,
+                backgroundColor: "#2eb85c",
+                paddingHorizontal: 5,
+                paddingVertical: 2,
+                color: "#FFFF",
+                fontSize: 20,
+                fontWeight: 700,
+                borderRadius: 4
+            },
+            cancelado: {
+                alignSelf: "center",
+                marginLeft: 30,
+                backgroundColor: "#cf2122",
+                paddingHorizontal: 5,
+                paddingVertical: 2,
+                color: "#FFFF",
+                fontSize: 15,
+                fontWeight: 500,
+                borderRadius: 4
             }
         }
     )
 
-    const getUserData = async () => {
+    
+    const getViajes = () => {
+        
         AsyncStorage.getItem('ubicacion').then(async response => {
             const userFromStorage = JSON.parse(response)
-            setUser(userFromStorage)   
+            backendApi.get(`/vehiculos/${userFromStorage.vehiculo_id}/misViajes`).then(response => {
+                setDirecciones(response.data.datos)
+            }).catch(error => {
+                console.log("error en direcciones list", error)
+            })
         })
     }
 
-    const getViajes = () => {
-        backendApi.get("/viajes/2h").then(response => {
-            setDirecciones(response.data.datos.filter(viaje => viaje.vehiculo_id === user.vehiculo_id))
-        })
-    }
-     
-    useEffect(()=>{
-        getUserData()
-    }, [])
-    useEffect(()=>{
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+
+            setRefreshing(false);
+            getViajes()
+        }, 2000);
+    }, []);
+
+    useEffect(() => {
         getViajes()
-    }, [direcciones])
+    }, [])
     return (
-        <View>
+        <ScrollView
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             {
                 direcciones.map(direccion => {
                     return (
-                        <View key={direccion.id} style={styles.container}>
-                            <Text style={styles.fechaText}>
-                                {direccion.fecha}
-                            </Text>
-                            <View style={styles.direccionContainer}>
-                                <Text style={{color: "#ffff"}}>
-                                    Debes ir a:
+                        <ScrollView horizontal={true} key={direccion.id}
+                            contentContainerStyle={styles.container}>
+                            <View>
+                                <Text style={styles.fechaText}>
+                                    {direccion.viaje.fecha}
                                 </Text>
-                                <Text style={styles.direccionText}>
-                                    {direccion.direccion}
-                                </Text>
+                                <View style={styles.direccionContainer}>
+                                    <Text style={{ color: "#ffff" }}>
+                                        Debes ir a:
+                                    </Text>
+                                    <Text style={styles.direccionText}>
+                                        {direccion.viaje.direccion}
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
+                            {
+                                direccion.viaje.estado === "CANCELADO" ?
+                                    <Text style={styles.cancelado}>
+                                        CANCELADO
+                                    </Text>
+                                    :
+                                    direccion.isNew ?
+                                        <Text style={styles.viewIsNew}>
+                                            NUEVO
+                                        </Text>
+                                        :
+                                        <>
+                                        </>
+                            }
+
+                        </ScrollView>
                     )
                 })
             }
-        </View>
+        </ScrollView>
     )
 }
 
