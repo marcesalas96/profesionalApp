@@ -1,8 +1,4 @@
 import { Modal, View, Text, StyleSheet, Button } from "react-native";
-import { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import backendApi from "../api/backendApi";
-
 
 export const ModalNotificaciones = ({visible, setVisible, nuevoViaje}) => {
 

@@ -1,4 +1,4 @@
-import { Button, View, StyleSheet, Text, Dimensions, Alert, BackHandler } from 'react-native'
+import { Button, View, StyleSheet, Text, Dimensions } from 'react-native'
 import { Formik, useField } from 'formik'
 import { TextInput } from 'react-native'
 import * as yup from 'yup'
@@ -8,6 +8,8 @@ import { useEffect, useState, useContext } from 'react'
 import { startActivityAsync, ActivityAction } from 'expo-intent-launcher';
 import * as Battery from 'expo-battery';
 import Context from '../context/authContext'
+import { ModalPermisos } from './ModalPermisos'
+import * as Location from 'expo-location';
 
 const styles = StyleSheet.create({
     container: {
@@ -75,6 +77,37 @@ const LogInPage = () => {
 
     const [loginError, setloginError] = useState("")
     const { setToken } = useContext(Context)
+    const [visible, setVisible] = useState(false)
+    const [visibleBateria, setVisibleBateria] = useState(false)
+    const LOCATION_TASK_NAME = 'background-location-task';
+
+    const requestPermissions = async () => {
+        const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+        if (foregroundStatus === 'granted') {
+            const backgroundStatus = await AsyncStorage.getItem("backroundStorage")
+            console.log(backgroundStatus)
+            if (backgroundStatus === 'granted') {
+                await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                    accuracy: Location.Accuracy.BestForNavigation,
+                    deferredUpdatesDistance: 10,
+                    timeInterval: 10000,
+                    activityType: Location.ActivityType.AutomotiveNavigation,
+                    showsBackgroundLocationIndicator: true,
+                    foregroundService: {
+                        killServiceOnDestroy: true,
+                        notificationBody: "Usando ubicacion en 2 plano",
+                        notificationTitle: "Ubicacion",
+                        
+                    }
+                });
+            }else{
+                setVisible(true)
+            }
+        }
+        else{
+        }
+    };
+
     const onHandleSubmit = (values) => {
         const loginData = {
             user: values.user,
@@ -98,9 +131,10 @@ const LogInPage = () => {
     }
 
     useEffect(() => {
+        requestPermissions()
         Battery.isBatteryOptimizationEnabledAsync().then(result => {
             if (result) {
-                startActivityAsync(ActivityAction.MANAGE_APPLICATIONS_SETTINGS);
+               setVisibleBateria(true)
             }
         })
     }, [])
@@ -108,6 +142,10 @@ const LogInPage = () => {
         <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={onHandleSubmit} >
             {({ handleSubmit }) => {
                 return (
+                <>
+                     
+                    <ModalPermisos visible={visibleBateria} setVisible={setVisibleBateria} type={"bateria"} texto={"Sigue los siguientes pasos para asegurarte de que la aplicación funcione correctamente incluso cuando tu celular esté bloqueado. De lo contrario, podrían surgir problemas en la aplicación: \n\n1. Presioná el botón CONFIGURACIÓN que se encuentra al final.\n2. Busca y selecciona la aplicación 'Profesional App'.\n3. Dentro de la configuración de batería, elige la opción 'Sin restricciones' para la aplicación.\n4. Regresa a la aplicación y selecciona la opción 'Listo'."}></ModalPermisos>
+                    <ModalPermisos visible={visible} setVisible={setVisible} texto={"Necesitamos acceder a tu ubicacíon en segundo plano para el correcto seguimiento de tu movil."} ></ModalPermisos>
                     <View style={{ backgroundColor: "#171f4b", flex: 1 }}>
                         <View style={styles.container}>
                             <View style={{ flexDirection: "row", alignSelf: "center" }}>
@@ -120,6 +158,7 @@ const LogInPage = () => {
                             <Button title='Ingresar' onPress={handleSubmit} color={"#FF4960"} />
                         </View>
                     </View>
+                </>
                 )
             }}
         </Formik>
