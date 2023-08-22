@@ -8,34 +8,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 let user = null
-const requestPermissions = async () => {
-    const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
-    if (foregroundStatus === 'granted') {
-        const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-        if (backgroundStatus === 'granted') {
-            AsyncStorage.getItem('ubicacion', (err, result) => {
-                user = JSON.parse(result)
-            })
-            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                accuracy: Location.Accuracy.BestForNavigation,
-                deferredUpdatesDistance: 10,
-                timeInterval: 10000,
-                activityType: Location.ActivityType.AutomotiveNavigation,
-                showsBackgroundLocationIndicator: true,
-                foregroundService: {
-                    killServiceOnDestroy: true,
-                    notificationBody: "Usando ubicacion en 2 plano",
-                    notificationTitle: "Ubicacion",
-                    
-                }
-            });
-        }
-    }
-    else{
-    }
-};
-requestPermissions()
-
 TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     if (error) {
         console.log("ERORRRRR", error)
@@ -59,7 +31,4 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     }
 });
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
 registerRootComponent(App);
