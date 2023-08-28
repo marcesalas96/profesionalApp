@@ -24,8 +24,12 @@ const styles = StyleSheet.create({
 
 })
 const AppBar = ({ navigation, section }) => {
-    const {setToken} = useContext(Context)
-    const logout = () => {
+    const {setToken, user} = useContext(Context)
+    const logout = async () => {
+        const newUser = {...user}
+        newUser.latitud = null
+        newUser.longitud = null
+        await backendApi.put(`/ubicaciones/${user.id}`, newUser)
         backendApi.post('/logout').then(async () => {
             await TaskManager.unregisterAllTasksAsync()
             await AsyncStorage.clear()

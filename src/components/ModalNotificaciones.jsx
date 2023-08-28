@@ -1,5 +1,6 @@
 import { Modal, View, Text, StyleSheet, Button } from "react-native";
-
+import { useContext } from "react";
+import Context from "../context/authContext";
 export const ModalNotificaciones = ({visible, setVisible, nuevoViaje}) => {
 
     const styles = StyleSheet.create({
@@ -42,6 +43,13 @@ export const ModalNotificaciones = ({visible, setVisible, nuevoViaje}) => {
             fontWeight: "600",
         }
     })
+    const {changeEstado} = useContext(Context)
+
+    
+    const handlePress = () => {
+        setVisible(false)
+        changeEstado()
+    }
     return (
         <Modal
             visible={visible}
@@ -61,7 +69,7 @@ export const ModalNotificaciones = ({visible, setVisible, nuevoViaje}) => {
                             :
                             <></>
                         }
-                        <Button title="ACEPTAR" onPress={()=>{setVisible(false)}} />
+                        <Button title="ACEPTAR" onPress={handlePress} />
                     </View>
                 </View>
             </View>

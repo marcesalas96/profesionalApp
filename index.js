@@ -20,7 +20,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     }
     if (data) {
         const { locations } = data;
-        console.log(locations)
         try {
             user.latitud = locations[0].coords.latitude
             user.longitud = locations[0].coords.longitude
