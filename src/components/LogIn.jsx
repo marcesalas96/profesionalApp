@@ -5,7 +5,6 @@ import * as yup from 'yup'
 import backendApi from '../api/backendApi'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState, useContext } from 'react'
-import { startActivityAsync, ActivityAction } from 'expo-intent-launcher';
 import * as Battery from 'expo-battery';
 import Context from '../context/authContext'
 import { ModalPermisos } from './ModalPermisos'
@@ -45,10 +44,11 @@ const initialValues = {
 
 const validationSchema = yup.object().shape({
     user: yup.string().required("El usuario es obligatorio"),
-    password: yup.string().required("La contraseña es obligatoria")
+    password: yup.string()
 })
 
 const FormikInputValue = ({ error, style = {}, name, ...props }) => {
+    const {password, type} = props
     const [field, meta, helpers] = useField(name)
     const inputStyle = [
         styles.input,
@@ -58,7 +58,7 @@ const FormikInputValue = ({ error, style = {}, name, ...props }) => {
     return (
         <>
             <TextInput
-                value={field.value}
+                value={password && type==="password" ? password : field.value}
                 onChangeText={value => helpers.setValue(value)}
                 {...props}
                 style={inputStyle}
@@ -80,8 +80,11 @@ const LogInPage = () => {
     const [visible, setVisible] = useState(false)
     const [visibleBateria, setVisibleBateria] = useState(false)
     const LOCATION_TASK_NAME = 'background-location-task';
+    const [password, setPassword] = useState(null)
 
     const requestPermissions = async () => {
+        const pass = await AsyncStorage.getItem("password")
+        setPassword(pass)
         const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
         if (foregroundStatus === 'granted') {
             const backgroundStatus = await AsyncStorage.getItem("backroundStorage")
@@ -110,11 +113,12 @@ const LogInPage = () => {
     const onHandleSubmit = (values) => {
         const loginData = {
             user: values.user,
-            password: values.password
+            password: password ? password : values.password
         }
         backendApi.post("/login", loginData)
             .then(async response => {
                 if (response.data.userData.rol.includes('chofer') && response.data.userData.state === '1') {
+                    await AsyncStorage.setItem('password', loginData.password)
                     await AsyncStorage.setItem('token', response.data.token);
                     await AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
                     await AsyncStorage.setItem('ubicacion', JSON.stringify(response.data.ubicacion[0]));
@@ -152,7 +156,7 @@ const LogInPage = () => {
                                 <Text style={{ color: "#FF4960", fontSize: 20, fontWeight: "bold" }}>Remis</Text>
                             </View>
                             <FormikInputValue name={"user"} placeholder={"Usuario"} />
-                            <FormikInputValue name={"password"} placeholder={"Contraseña"} secureTextEntry />
+                            <FormikInputValue name={"password"} placeholder={"Contraseña"} secureTextEntry password={password} type={"password"}/>
                             {loginError && <Text style={{ color: "#FF4960" }}>{loginError}</Text>}
                             <Button title='Ingresar' onPress={handleSubmit} color={"#FF4960"} />
                         </View>

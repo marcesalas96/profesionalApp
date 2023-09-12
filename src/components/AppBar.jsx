@@ -31,8 +31,9 @@ const AppBar = ({ navigation, section }) => {
         newUser.longitud = null
         await backendApi.put(`/ubicaciones/${user.id}`, newUser)
         backendApi.post('/logout').then(async () => {
+            const keys = ["token", "user", "ubicacion", "token-init-date"]
             await TaskManager.unregisterAllTasksAsync()
-            await AsyncStorage.clear()
+            await AsyncStorage.multiRemove(keys)
             setToken(null)
         })
     }

@@ -1,6 +1,7 @@
 import {useContext } from 'react'
 import { View, TouchableOpacity, Text, StyleSheet} from 'react-native'
 import Context from '../context/authContext'
+import { useKeepAwake } from 'expo-keep-awake';
 
 
 const styles = StyleSheet.create({
@@ -70,6 +71,7 @@ const ButtonChangeState = () => {
     const onEstadoChange = () => {
         changeEstado()
     }
+    useKeepAwake()
     return (
         <>
             <View style={styles.textContainer}>
