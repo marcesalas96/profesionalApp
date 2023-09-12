@@ -42,7 +42,8 @@
     "react-router-native": "^6.13.0",
     "yup": "^1.2.0",
     "expo-battery": "~7.1.1",
-    "expo-intent-launcher": "~10.5.2"
+    "expo-intent-launcher": "~10.5.2",
+    "expo-keep-awake": "~12.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -27,7 +27,7 @@ const DireccionesList = ({ }) => {
 
             },
             direccionText: {
-                color: "#7c9cff",
+                color: "#ffff",
                 fontSize: 15
             },
             viewIsNew: {
