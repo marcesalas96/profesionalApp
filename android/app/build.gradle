@@ -113,13 +113,13 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.ProfesionalApp'
+    namespace "com.profesionalappchoferes"
     defaultConfig {
-        applicationId 'com.anonymous.ProfesionalApp'
+        applicationId "com.profesionalappchoferes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "2.1.4"
+        versionCode 1
+        versionName "1.0"
     }
 
     splits {

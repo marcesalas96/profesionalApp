@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/icon.png",
+      "image": "./assets/iconChico.png",
       "resizeMode": "contain",
       "backgroundColor": "#262C4E"
     },
@@ -16,6 +16,13 @@
         "expo-location",
         {
           "isAndroidBackroungLocationEnabled": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./local/assets/iconChico.png",
+          "color": "#ffffff"
         }
       ]
     ],
@@ -30,6 +37,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",

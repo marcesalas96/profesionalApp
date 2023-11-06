@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "884627250529",
+    "project_id": "profesionalremis-wgst",
+    "storage_bucket": "profesionalremis-wgst.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884627250529:android:a9550cb066bd3911c63920",
+        "android_client_info": {
+          "package_name": "com.anonymous.ProfesionalApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884627250529-oas5rbjb64cn25tha250uekvcus0uv93.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVUBY6jatOzB_Gh_hMIF-OztPqauIMk_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884627250529-oas5rbjb64cn25tha250uekvcus0uv93.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

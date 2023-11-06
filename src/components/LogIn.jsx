@@ -128,6 +128,7 @@ const LogInPage = () => {
             }
             )
             .catch(error => {
+                console.log("erorrororororor",error)
                 setloginError("Credenciales incorrectas, intente de nuevo")
             })
 

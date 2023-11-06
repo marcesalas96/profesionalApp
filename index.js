@@ -1,7 +1,6 @@
 import { registerRootComponent } from 'expo';
 import App from './App';
 import * as TaskManager from 'expo-task-manager';
-import * as Location from 'expo-location';
 import backendApi from './src/api/backendApi.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
