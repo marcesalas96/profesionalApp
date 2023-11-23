@@ -8,7 +8,8 @@ import { useContext, useState, useEffect, useRef } from 'react'
 import Context from '../context/authContext'
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 const styles = StyleSheet.create({
     container: {
@@ -60,7 +61,7 @@ const Footer = () => {
     const [visible, setVisible] = useState(false)
     const [nuevoViaje, setNuevoViaje] = useState(null)
     const { user, estado } = useContext(Context)
-
+    const LOCATION_TASK_NAME = 'background-location-task';
     const getNewViaje = async () => {
         try {
             const response = await backendApi.get(`/vehiculos/${user.vehiculo_id}/misViajes`);
@@ -71,13 +72,14 @@ const Footer = () => {
         }
     };
 
-    async function schedulePushNotification(viaje) {
+    async function schedulePushNotification(viaje, token) {
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: "Nuevo viaje",
-                body: `Dirección: ${viaje.viaje.direccion}`,
-                data: { data: 'goes here' },
+                body: `Dirección: ${viaje.viaje.direccion.toUpperCase()}`,
+                data: { data: token },
             },
+            trigger: null
         });
     }
 
@@ -85,9 +87,10 @@ const Footer = () => {
         let token;
 
         if (Platform.OS === 'android') {
-            await Notifications.setNotificationChannelAsync('default', {
-                name: 'default',
-                importance: Notifications.AndroidImportance.MAX,
+            const channel = 'travels'
+            await Notifications.setNotificationChannelAsync(channel, {
+                name: channel,
+                importance: Notifications.AndroidImportance.HIGH,
                 vibrationPattern: [0, 250, 250, 250],
                 lightColor: '#FF231F7C',
             });
@@ -104,19 +107,17 @@ const Footer = () => {
                 alert('Failed to get push token for push notification!');
                 return;
             }
-            token = await Notifications.getExpoPushTokenAsync({
-                projectId: Constants.expoConfig.extra.eas.projectId,
-              });
+            token = await Notifications.getDevicePushTokenAsync();
             console.log(token);
         } else {
             alert('Must use physical device for Push Notifications');
         }
-
+        await AsyncStorage.setItem("ExpoToken", token.data)
         return token.data;
     }
-    const useNotification = async (viaje) => {
-        await schedulePushNotification(viaje)
-        console.log(expoPushToken)
+    const useNotification = async (viaje, token) => {
+        await Notifications.registerTaskAsync(LOCATION_TASK_NAME)
+        await schedulePushNotification(viaje, token)
     }
 
     useEffect(() => {
@@ -127,7 +128,7 @@ const Footer = () => {
     }, [user]);
     useEffect(() => {
         if (nuevoViaje && estado.disponible === true) {
-            useNotification(nuevoViaje)
+            useNotification(nuevoViaje, expoPushToken)
             setVisible(true);
         }
     }, [nuevoViaje])
