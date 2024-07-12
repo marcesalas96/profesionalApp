@@ -2,6 +2,7 @@ import {useContext } from 'react'
 import { View, TouchableOpacity, Text, StyleSheet} from 'react-native'
 import Context from '../context/authContext'
 import { useKeepAwake } from 'expo-keep-awake';
+import Notifiaciones from './Notificaciones';
 
 
 const styles = StyleSheet.create({

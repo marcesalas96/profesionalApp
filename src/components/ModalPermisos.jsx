@@ -1,4 +1,4 @@
-import { Modal, View, Text, StyleSheet, Button } from "react-native";
+import { Modal, View, Text, StyleSheet, Button, Alert } from "react-native";
 import * as Location from 'expo-location';
 import { ActivityAction, startActivityAsync } from "expo-intent-launcher";
 import AsyncStorage from '@react-native-async-storage/async-storage';
