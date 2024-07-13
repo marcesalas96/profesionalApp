@@ -39,7 +39,7 @@ App para conductores de la empresa profesional Remis, para que los mismos compar
 5. **Instalar dependencias**:
    - Utiliza `npm` o `yarn` para instalar las dependencias del proyecto.
    - Para el correcto funcionamiento es necesario instalar eas-cli de manera global
-      -   `npm install eas-cli`
+      -   `npm install -g eas-cli`
   
 6. **Iniciar aplicacíon**
    - Para iniciar la aplicación con Expo Go, ejecuta `npx expo start` en la terminal.
