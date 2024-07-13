@@ -29,5 +29,5 @@ App para conductores de la empresa profesional Remis, para que los mismos compar
 7. **Iniciar aplicacíon**
    - Para iniciar la aplicación con Expo Go, ejecuta `npx expo start` en la terminal.
 8. **Crear archivo APK**
-   -   `npx expo prebuild`
+   -   `npm install -g eas-cli`
    -   `eas build -p android --profile preview`
