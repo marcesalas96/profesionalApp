@@ -117,7 +117,7 @@ const LogInPage = () => {
         }
         backendApi.post("/login", loginData)
             .then(async response => {
-                if (response.data.userData.rol.includes('chofer') && response.data.userData.state === '1') {
+                if (response.data.userData.rol.includes('conductor') && response.data.userData.is_active === 'activo') {
                     await AsyncStorage.setItem('password', loginData.password)
                     await AsyncStorage.setItem('token', response.data.token);
                     await AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
@@ -126,10 +126,9 @@ const LogInPage = () => {
                     setToken(response.data.token)
                 }
             }
-            )
+            ) 
             .catch(error => {
-                console.log("erorrororororor",error)
-                setloginError("Credenciales incorrectas, intente de nuevo")
+                setloginError(error.message)
             })
 
     }
