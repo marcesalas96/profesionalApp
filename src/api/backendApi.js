@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const backendApi = axios.create({
   withCredentials: true,
   // baseURL: 'https://test.projectsdm.com/api',
-  productionUrl: 'https://api.profesional-remis.com/api'
+  productionUrl: 'https://api.profesionalremis88.com/api'
 });
 
 
