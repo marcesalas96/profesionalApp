@@ -61,7 +61,7 @@ const Footer = () => {
     const [visible, setVisible] = useState(false)
     const [nuevoViaje, setNuevoViaje] = useState(null)
     const { user, estado } = useContext(Context)
-    const LOCATION_TASK_NAME = 'background-location-task';
+    const NOTIFICATION_TASK_NAME = 'background-notification-task';
     const getNewViaje = async () => {
         try {
             const response = await backendApi.get(`/vehiculos/${user.vehiculo_id}/misViajes`);
@@ -116,7 +116,7 @@ const Footer = () => {
         return token.data;
     }
     const useNotification = async (viaje, token) => {
-        await Notifications.registerTaskAsync(LOCATION_TASK_NAME)
+        await Notifications.registerTaskAsync(NOTIFICATION_TASK_NAME)
         await schedulePushNotification(viaje, token)
     }
 
